@@ -1,0 +1,1020 @@
+STEPS
+
+MEAN Stack App 
+
+David Acosta
+
+https://www.youtube.com/watch?v=6zfnOrHIUtA&list=PL3vQyqzqjZ637sWpKvniMCxdqZhnMJC1d&index=2
+https://www.youtube.com/watch?v=6zfnOrHIUtA&list=PL3vQyqzqjZ637sWpKvniMCxdqZhnMJC1d&index=2
+
+
+1. Create MAIN FOLDER
+   Create file called server.js
+   Option
+   Right Click Main Folder>GitBash>Type in, touch server.js
+   if there is an error
+   type node -v
+
+2. Initial your Node Application
+   Rigth Click Main Folder>npm init
+ 
+   In package.json
+   "start": "npm server.js" 
+ 
+3. Install Dependencies
+   express
+   nodemon
+   morgan
+   mongoose
+
+   npm i express nodemon morgan mongoose --save
+
+4. Let's setup our Server in server.js
+
+var express = require ("express");
+var app = express();
+
+app.listen (process.env.PORT || 8080, function (){
+    console.log ("The server is running...");
+})
+
+
+Remarks
+process.env.PORT 
+this only if the environtment where you are deploying your app has its own PORT.
+
+
+6. Check if your app is running.
+
+
+   Right Click Project Folder>type in 
+	node server
+	or
+	node server.js
+	or
+	nodemon server
+
+7. Let's create a simple get Route
+
+
+	app.get("/", function (req, res){
+    		res.send("Hello World");
+	})
+
+8. Open Browser>Type, http://localhost:8080/
+
+
+Remarks
+
+Above is our simple get route.
+
+User will make a get request by opening a browser  by going to above route e.g. "/"
+
+http://localhost:8080/
+
+After a user enter the route or website or that link. We will simpl respond and send the string "Hello World" in the browser.
+
+Other Types of Method
+get
+update
+delete
+post
+
+
+To End Terminal
+In Gitbash or Command Prompt>Click Ctrl + C
+
+To Start Server
+In Gitbash or Command Prompt>
+	node server
+	or
+	node server.js
+	or
+	nodemon server
+
+
+Remarks
+
+nodemon	 
+It is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected. 
+
+morgan
+It is a great tool that logs the requests along with some other information depending upon its configuration and the preset used. It proves to be very helpful while debugging and also if you want to create Log files. 
+
+you can now delete the above simple route as this is for testing purpose only.
+
+
+9. Let's use morgan middleware
+
+   In server.js
+   var morgan = require("morgan");
+   app.use (morgan('dev'))
+
+
+Remarks
+
+app.use (); this is how we use all middleware in express.
+
+
+See the documentation of Morgan middleware to see the available value you can pass in morgan()
+If you make get request or user type the website on the browser, morgan wil log that request. Every get request will gonna logged.
+
+
+Example
+
+Try to make a get route "/home"
+
+Then access
+http://localhost:8080/home
+
+Delete the below route afterwards because we dont need it.
+
+
+app.get("/home", function (req, res){
+    res.send("Home Route")
+})
+
+
+*******************************************************************************************************************************
+
+10. Database Connection
+    Awhile ago we already instsalled mongoose
+    Steps:Can be shown in https://www.youtube.com/watch?v=UrjZ3qn44uE
+    Connect to MongoDB Atlas through NodeJS
+
+
+
+var mongoose = require('mongoose');
+mongoose.set('strictQuery', false); //to avoid depracation warning or disapproval warning.
+const db = "mongodb+srv://database:aObnjrnLkaucBpzW@cluster101.uogtn.mongodb.net/?retryWrites=true&w=majority";
+//connection string from mongodb atlas
+
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+};
+
+mongoose.connect (db, connectionParams)
+.then (()=>{
+console.log ("Connected to the Database");
+}).catch((err)=>{
+console.log ("Errror connecting the database", err);
+})
+
+
+
+
+REMARKS: Other ways to catch error when database is not connected
+
+if (err){
+    console.log("Not connected to the database" + err);
+}
+else{
+    console.log ("Sucessfully connected to MongoDB.");
+}
+
+OPTION
+
+You can also use the below, what it does is crashes the server.
+throw err;  
+
+Try and Catch Block
+
+
+THING YOU MUST KNOW
+
+app.use  the syntax we use to use our dependncies.
+
+Morgan is an HTTP request level Middleware. It is a great tool that logs the requests along with some other 
+information depending upon its configuration and the preset used. It proves to be very helpful while debugging 
+and also if you want to create Log files. Every request you made on the server is being logged.
+
+Express is a layer built on the top of the Node js that helps manage servers and routes.
+
+Mongoose is an object modeling tool for MongoDB and Node.js. What this means in practical terms is that you can define 
+your data model in just one place, in your code. It allows defining schemas for our data to fit into, while also abstracting 
+the access to MongoDB. This way we can ensure all saved documents share a structure and contain required properties.
+
+In computer networking, a port is a number assigned to uniquely identify a connection endpoint and 
+to direct data to a specific service. At the software level, within an operating system, a port is a 
+logical construct that identifies a specific process or a type of network service. A port is identified 
+for each transport protocol and address combination by a 16-bit unsigned number, known as the port number. 
+The most common transport protocols that use port numbers are the Transmission Control Protocol (TCP) and 
+the User Datagram Protocol (UDP).
+
+
+11. Let's finalize our code in server.js
+
+    Just create a variable for the port and update our listen method. Instead process.env.PORT || 8080 we canjust replace it
+    with the variable port.
+    var port = process.env.PORT   || 8080;
+
+
+See the Final Code
+
+var express = require ("express");
+var app = express();
+var port = process.env.PORT   || 8080;
+var morgan = require("morgan");
+
+var mongoose = require('mongoose');
+mongoose.set('strictQuery', false); //to avoid depracation warning or disapproval warning.
+const db = "mongodb+srv://database:aObnjrnLkaucBpzW@cluster101.uogtn.mongodb.net/?retryWrites=true&w=majority";
+//connection string from mongodb atlas
+
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+};
+
+mongoose.connect (db, connectionParams)
+.then (()=>{
+console.log ("Connected to the Database");
+}).catch((err)=>{
+console.log ("Errror connecting the database", err);
+})
+
+
+app.use (morgan('dev'))
+
+
+app.listen (port, function (){
+    console.log ("The server is running...");
+})
+
+
+Remarks
+The Listen method listens for events and returns when an event has occurred. For example, a message has been received, a database update has occurred, and so on. In addition, should a connection become unusable, the Listen method should return a status indicating this.
+
+
+***********************************************************************************************
+
+5. Let' setup our User Model & Routes
+
+Right click the Main Project Folder
+mkdir app>cd app>mkdir models>cd models\>touch user.js
+
+REMARKS
+Basically inside of our main folder we just created app FOLDER>inside we created models FOLDER>inside we created user.js FILE
+Documentation: https://mongoosejs.com/docs/guide.html
+
+Go to user.js
+Go to user.js
+This is wehere we are going to set up our Schema
+
+
+var mongoose = require ("mongoose");
+var Schema = mongoose.Schema;
+
+var UserSchema = new Schema ({
+    username: {type:String, lowercase: true, required: true, unique: true},  //this is our validation
+    password: {type:String, required: true},
+    email: {type:String, lowercase: true, required: true, unique: true},
+});
+
+module.exports = mongoose.model("User", UserSchema); 
+
+
+REMARKS
+
+In order to create a user model using mongoose.
+first we require mongoose
+We access it's property called Schema
+Then we create a new Object with username, password, and email property with the built in validation.
+
+to use this module outside we have to export it.  We will be using it in our server.js main module
+we pass in "User" it could be any name, then we pass UserSchema as the 2nd Arg
+User wil now be the name of our UserSchema
+
+
+
+
+
+In our server.js
+In our server.js
+
+REMARKS
+
+Let's add bodyParser so we can parse data into json object. You can copy paste it from the documentation
+Documenation:	http://expressjs.com/en/5x/api.html#req.body
+
+We will also requie mongoose in our server.js
+We will asso require our user model in server.js
+Then we'll add here our post route.
+
+
+const bodyParser = require('body-parser')
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+
+var mongoose = require ("mongoose");
+var User = require ('./app/models/user');
+
+//http://localhost:8080/users
+app.post("/users", function (req,res){
+    var user = new User()
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email =req.body.email;
+    user.save();
+    res.send ("User Created");
+})
+
+
+
+See the updated server.js File
+See the updated server.js File
+
+
+
+var express = require ("express");
+var app = express();
+var port = process.env.PORT   || 8080;
+var mongoose = require ("mongoose");
+var User = require ('./app/models/user');
+
+
+const bodyParser = require('body-parser')
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+var morgan = require("morgan");
+app.use (morgan('dev'))
+
+
+var mongoose = require('mongoose');
+mongoose.set('strictQuery', false); //to avoid depracation warning or disapproval warning.
+const db = "mongodb+srv://database:aObnjrnLkaucBpzW@cluster101.uogtn.mongodb.net/?retryWrites=true&w=majority";
+//connection string from mongodb atlas
+
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+};
+
+mongoose.connect (db, connectionParams)
+.then (()=>{
+console.log ("Connected to the Database");
+}).catch((err)=>{
+console.log ("Error connecting the database", err);
+})
+
+
+//http://localhost:8080/users
+app.post("/users", function (req,res){
+    var user = new User()
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email =req.body.email;
+    user.save();
+    res.send ("User Created");
+})
+
+
+
+app.listen ( port, function (){
+    console.log("The Server is Running... " + port)
+});
+
+
+6. Let's test our Post Route
+
+
+Go to Postman
+Choose POST METHOD, type in http://localhost:8080/users
+Choose Body>Raw>JSON
+Type in the Text Field>Click Send
+
+{"username": "Philip",
+"password": "0507891111",
+"email": "philip@gmail.com"}
+
+
+Check your MONGODB DATA if it goes to your database.
+
+Go to MongoDB Atlas Website
+Under Deployment>Choose Database (This is my database name).
+Click Browse Collections to see your users database
+
+
+Remarks
+boodParser - parses data into json object.
+robomongo  - you can also use aside from mongodb to get your data.
+
+
+
+
+***********************************************************************************************
+
+6. HASHING THE PASSWORD SO IT WONT BE VISIBLE TO THE DATABASE
+   https://www.youtube.com/watch?v=rYdhfm4m7yg 
+
+   npm i bcrypt --save
+
+   Go to user.js where we have our UserSchema. We are adding this code
+
+const bcrypt = require ("bcrypt");
+
+
+//PRESAVE
+UserSchema.pre('save',async function (next){
+try{
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(this.password, salt)
+    this.password = hashedPassword
+    next()
+    // console.log(this.email, this.password)
+    // this is just a test to check if email and pw will be logged on the terminal
+
+}
+
+catch(error){
+    next(error)
+}
+
+})
+
+
+REMARKS
+Ctrl + C to stop the Termina or Gitbash
+Then restat the app, Right click the Main Folder>Gitbash>nodemon server
+
+
+
+Then go to postman again and try to test if our presave and post save is ok.
+
+
+METHOD: POST
+http://localhost:8080/users
+Body raw
+Choos JSON
+
+Paste the below json Object, and see if it will get created. Then go to your MongoDB
+
+
+{"username": "Nobdy",
+"password": "050454222",
+"email": "nobody@gmail.com"}
+
+REMARKS
+in mongodb>Under Deployment>Click your database name, mine is database>Browse Collections
+
+
+
+7. in sever.js let's update the below code. we are actually updating user.save();
+
+FROM THIS
+app.post("/users", function (req,res){
+    var user = new User()
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email =req.body.email;
+    user.save();
+    res.send ("User Created");
+})
+
+TO THIS CODE
+
+var errmessage = " Error Code. Username is already taken.";
+
+//http://localhost:8080/users
+app.post("/users", function (req,res){
+    var user = new User()
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email =req.body.email;
+    user.save(function(err){
+        if(err){
+            res.send(err.code + errmessage)
+        }
+        else{
+            res.send ("Yes User Created")
+        }
+    });
+})
+
+
+
+MOST UPDATED
+
+var errmessage = "Fillup the form completely";
+
+//http://localhost:8080/users
+app.post("/users", function (req,res){
+    var user = new User()
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email =req.body.email;
+
+
+    if (req.body.username == null || req.body.username == "" || req.body.password == null || req.body.password == "" || req.body.email == null || req.body.email == ""  ){
+        res.send ("Ensure usernaame, password and email are filled up.");
+    }
+
+    else{
+
+        user.save(function(err){
+            if(err){
+                res.send(err.code + errmessage)
+            }
+            else{
+                res.send ("Yes User Created")
+            }
+        });
+    }
+
+})
+    
+******************************************************************************
+
+8. Let's create a separate module for our ROUTE
+   Inside of our app Folder where we have our models FOLDER
+   Create routes FOLDER>inside, create api.js file
+   Remove our post route in server.js
+   Then put the post route in api.js
+   We will encapsulate this route with  module.exports = function (router) {    return router};
+   instead of app.post we will be using router.post, and we will return this router.
+
+   This router.post is creating a new User so we have to require our user.js models
+   var User = require ("../models/user")
+
+
+   Lastly,
+   In our server.js file just remove var User = require ('./app/models/user');
+   since we already remove our post route in user.js
+
+
+PROJECT FOLDER
+	app FOLDER - BackEnd
+		models FOLDER
+			user.js
+		routes FOLDER
+			api.js
+	server.js
+
+
+
+UPDATED app.js FILE
+
+
+var User = require ("../models/user");
+
+module.exports = function (router) {
+
+
+
+//http://localhost:8080/users
+//http://localhost:8080/users
+
+var errmessage = "Fillup the form completely";
+
+//http://localhost:8080/users
+router.post("/users", function (req,res){
+    var user = new User()
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email =req.body.email;
+
+
+    if (req.body.username == null || req.body.username == "" || req.body.password == null || req.body.password == "" || req.body.email == null || req.body.email == ""  ){
+        res.send ("Ensure usernaame, password and email are filled up.");
+    }
+
+    else{
+
+        user.save(function(err){
+            if(err){
+                res.send(err.code + errmessage)
+            }
+            else{
+                res.send ("Yes User Created")
+            }
+        });
+    }
+
+})
+
+
+return router;
+
+};	
+
+
+
+
+9. Now let's work on our server.js Add the below code. Order of the middleware is
+important. Make sure app.use(appRoutes);  is the last one in app.use codes.
+
+var router = express.Router(); //after all the middlewares or dependency.
+var appRoutes = require ("./app/routes/api") (router); //after all the middlewares or dependency.
+
+
+app.use("/api", appRoutes); 
+//it should after all app.use() mmiddleware or body parser or else it will not going to work.
+//Our post route will become http://localhost:8080/api/users
+
+Go to postman
+POST Method: http://localhost:8080/api/users
+Body>raw>JSON
+
+Try if it will work.
+
+{"username": "holdontight",
+"password": "050454222",
+"email": "holdontight@gmail.com"}
+
+
+*************************************************************************************************
+
+
+
+10. Lets create a FOLDER for FRONT END
+
+In our Main Project Folder>Create public FOLDER inside app FOLDER, inside views FOLDER inside
+index.html
+
+PROJECT FOLDER
+	app FOLDER - BackEnd
+		models FOLDER
+			user.js
+		routes FOLDER
+			api.js
+        public FOLDER - FrontEnd
+		app FOLDER
+			views FOLDER
+				index.html
+	server.js
+
+
+
+in index.html
+<p>Index HTML</p>
+
+
+
+in server.js
+
+
+
+In our server.js
+
+
+var path = require("path");
+app.use(express.static(__dirname + "/public"));
+
+
+
+app.get("*", function (req, res){
+    res.sendFile(path.join(__dirname + "/public/app/views/index.html"))
+})
+// no matter what the user type feed them this index page
+// Go to browser, try to go to http://localhost:8080/ let's see if our index.html will work.
+
+REMEMBER THIS
+
+//after all the middlewares or dependenc or else it will not work
+var router = express.Router(); 
+var appRoutes = require ("./app/routes/api") (router); 
+
+//it should after all app.use() mmiddleware or else it will not work
+app.use("/api", appRoutes); 
+
+
+
+
+11. Mapping Bootstrap and Angular Libraries
+
+
+in our public FOLDER, creates assets FOLDER
+inside of assets FOLDER create the below FOLDER
+	css FOLDER
+  	fonts FOLDER
+	js FOLDER
+
+
+
+PROJECT FOLDER
+	app FOLDER - BackEnd
+		models FOLDER
+			user.js
+		routes FOLDER
+			api.js
+        public FOLDER - FrontEnd
+		app FOLDER
+			views FOLDER
+				index.html
+		assets FOLDER - these folder are for the downloaded files for angular, jquery & bootrsap in case you did not use the CDN.
+                                if you have downloaded the files you have to link it to your html file.
+			css FOLDER
+			fonts FOLDER
+			js FOLDER
+
+	server.js
+
+
+REMARKS
+
+bootstrap
+-download the boostrap file,  use npm to install  or just use the below CDN from https://getbootstrap.com/docs/5.3/getting-started/introduction/
+
+
+  	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+angular
+-download the angular file from https://angularjs.org/>click zip then click download
+ paste the below file in your js folder.
+ 	angular.js
+ 	angular.min.js
+ 	angular.min.js.map
+	angular-animate
+	angular-animate.min
+	angular-animate.min.js.map
+	angular-route
+	angular-route.min
+	angular-route.min.js.map
+	
+        then in index.html, add the source path for angular and angular-route.
+
+ 	<script src="assets/js/angular.min.js"></script>
+	<script src = "assets/js/angular-route.min.js"></script>
+         
+
+ optional: use npm to install or just get the CDN
+   
+	
+
+jquery
+-download the jquery file or just use CDN
+
+	<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+
+
+Let's work on our index.html
+public>views>index.html
+
+Remarks: jquery must be on top of boostrap and angular script.
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="assets/js/angular.min.js"></script>
+    <script src = "assets/js/angular-route.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</body>
+</html>
+
+
+Then let's add a simple nav bar
+
+
+<!-- Simple Nav Bar -->
+    <style>
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+        }
+        
+        li {
+          display: inline;
+        }
+        </style>
+        </head>
+        <body>
+        
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#career">Careers</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#about"></a></li>
+        </ul>
+
+
+
+**************************************************************************************************************
+
+11. https://www.youtube.com/watch?v=u6ttDiik-c8&list=PL3vQyqzqjZ637sWpKvniMCxdqZhnMJC1d&index=6
+Implementing Angular Routes (ngRoute)
+
+
+OUR ANGULAR STRUCTURE
+
+PROJECT FOLDER
+	app FOLDER - BackEnd
+		models FOLDER
+			user.js
+		routes FOLDER
+			api.js
+        public FOLDER - FrontEnd
+		app FOLDER
+			views FOLDER
+				index.html
+  				pages FOLDER
+					about.html		
+					home.html
+			controllers FOLDER
+			app.js
+			routes.js
+
+		assets FOLDER - these folder are for the downloaded files for angular, jquery & bootrsap in case you did not use the CDN.
+                                if you have downloaded the files you have to link it to your html file.
+			css FOLDER
+			fonts FOLDER
+			js FOLDER
+
+	server.js
+
+
+
+
+Let's go to the  public FOLDER>app Folder>views FOLDER>create pages FOLDER the create 
+about.html just type in <p>About Page</p>
+home.html  just type in <p>Home Page</p>
+
+Let's go to the  public FOLDER>app Folder>create controllers FOLDER
+
+Let's go to the  public FOLDER>app Folder>create 2 Files
+app.js  	- this will serve as our main configuration file
+                - add then add console.log(" testing main configuration file");
+		- this is to test our file.
+               
+routes.js	- this will be all of our routes.
+		- and then add console.log("testing routes file");
+                - this is to test our file.
+
+Let's add our app.js path and routes.js path source to our index.html
+See the above Angular folder structure
+
+
+<script src="app/app.js"></script>
+<script src="app/routes.js"></script>
+
+Let's check if our app.js and routes.js is loaded properly.
+Go to browser then http://localhost:8080/
+Right Click the Browser>inpsect>Click Console
+
+
+It must show the below message. if it shows then the source paths of our app and routes.js is accurate.
+
+testing main configuration file
+testing routes file
+
+
+
+12. Let's create an Angular Module - in app.js
+
+Go to app.js>clear everything>type the below code
+angular.module("userApp",[]);
+
+arg1 is the name of your module, it could be any related name
+arg2 is any angular directives that you want to use.
+
+Remarks:
+app.js serves us our main configuration file.
+
+Let's try to test our angular moude. In app.js
+
+angular.module("userApp",[])
+
+.config(function(){
+    console.log("Testing configuration file.");
+})
+
+
+
+Let's inject this angular module to our index.html
+We can inject this angular module userApp in any DOM Element in index.html
+In this tutorial we will use it in below element.
+
+<body ng-app="userApp">
+
+
+Remarks
+we are telling in body element in index.html to use our userApp angular module
+It works because we have added the source path of our app.js in index.html
+
+
+Now, let's go to http://localhost:8080/
+Right click the browser>Inspect>Click Console check if Testing configuration file message appears.
+If it's working. You can now delete the below code.
+
+.config(function(){
+    console.log("Testing configuration file.");
+})
+
+Remarks
+Angular is not define. To solve the issue, put the angular cdn or link to header
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+
+
+13. Let's create an Angular Module - in routes.js
+
+Make sure you have add the angular-route path source in index.html
+<script src="assets/js/angular.min.js"></script>
+<script src = "assets/js/angular-route.min.js"></script>
+
+
+
+angular.module("appRoutes", ["ngRoute"])
+.config(function(){
+    console.log("Testing Routes");
+})
+
+
+Go back to app.js
+inject appRoutes as the 2nd argument.
+
+e.g.
+
+angular.module("userApp",["appRoutes"])
+
+.config(function(){
+    console.log("Testing configuration file.");
+})
+
+
+
+Then in app.js, inject the appRoutes
+
+angular.module("userApp",["appRoutes"])
+
+.config(function(){
+    console.log("Testing configuration file.");
+})
+
+
+**************************************************************************************************************
+
+14 Let's start building our route.
+https://www.youtube.com/watch?v=u6ttDiik-c8&list=PL3vQyqzqjZ637sWpKvniMCxdqZhnMJC1d&index=6
+
+Let's go to routes.js
+
+Let's update the below code.
+
+angular.module("appRoutes",['ngRoute'])
+
+.config(function(){
+    console.log("Testing routes file.");
+})
+
+
+UPDATED CODE
+
+angular.module("appRoutes",['ngRoute'])
+
+.config(function($routeProvider){
+    $routeProvider
+    .when("/",{
+        templateUrl: "app/views/pages/home.html"
+    })
+
+     .when("/about",{
+        templateUrl: "app/views/pages/about.html"
+    })
+
+})
+
+
+
+
+
+Then let's go to index.html
+
+From this code
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+
+We'll update to this one
+   <li><a href="#/">Home</a></li>
+   <li><a href="#/about">About</a></li>
+
+
+Then inject your home.js and about.js to your index.html. So we are injecting inside of our DIV Element.
+
+
+ <div ng-view></div>
+
+
+
+
+
+
